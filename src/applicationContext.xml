@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!DOCTYPE beans [
+    <!ELEMENT beans (bean*)>
+
+    <!ELEMENT bean (property*)>
+    <!ATTLIST bean id ID #REQUIRED>
+    <!ATTLIST bean class CDATA #IMPLIED>
+
+
+    <!ATTLIST property name CDATA #IMPLIED>
+    <!ATTLIST property ref IDREF #IMPLIED>
+    <!ELEMENT property (#PCDATA)>
+]>
+
+<beans>
+    <!--  DAOs  -->
+    <bean id="userDAO" class="bookstore.dao.Impl.UserDAOImpl"/>
+    <bean id="bookDAO" class="bookstore.dao.Impl.BookDAOImpl"/>
+    <bean id="cartItemDAO" class="bookstore.dao.Impl.CartItemDAOImpl"/>
+    <bean id="orderDAO" class="bookstore.dao.Impl.OrderDAOImpl"/>
+    <bean id="orderItemDAO" class="bookstore.dao.Impl.OrderItemDAOImpl"/>
+
+    <!-- Services   -->
+    <bean id="userService" class="bookstore.service.Impl.UserServiceImpl">
+        <property ref="userDAO" name="userDAO"/>
+    </bean>
+
+    <bean id="bookService" class="bookstore.service.Impl.BookServiceImpl">
+        <property ref="bookDAO" name="bookDAO"/>
+    </bean>
+    <bean id="cartItemService" class="bookstore.service.Impl.CartItemServiceImpl">
+        <property ref="cartItemDAO" name="cartItemDAO"/>
+        <property ref="bookService" name="bookService"/>
+    </bean>
+    <bean id="orderService" class="bookstore.service.Impl.OrderServiceImpl">
+        <property ref="orderDAO" name="orderDAO"/>
+        <property ref="orderItemDAO" name="orderItemDAO"/>
+        <property ref="cartItemDAO" name="cartItemDAO"/>
+
+    </bean>
+
+    <!-- Controllers -->
+    <bean id="page" class="myssm.myspringmvc.PageController"> </bean>
+
+    <bean id="user" class="bookstore.controller.UserController">
+        <property ref="userService" name="userService"/>
+        <property ref="cartItemService" name="cartItemService"/>
+    </bean>
+
+    <bean id="book" class="bookstore.controller.BookController">
+        <property ref="bookService" name="bookService"/>
+    </bean>
+    <bean id="cart" class="bookstore.controller.CartController">
+        <property ref="cartItemService" name="cartItemService"/>
+    </bean>
+    <bean id="order" class="bookstore.controller.OrderController">
+        <property ref="orderService" name="orderService"/>
+        <property ref="cartItemService" name="cartItemService"/>
+    </bean>
+</beans>
